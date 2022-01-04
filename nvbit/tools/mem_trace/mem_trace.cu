@@ -291,24 +291,21 @@ void nvbit_at_cuda_event(CUcontext ctx, int is_exit, nvbit_api_cuda_t cbid,
                 p->gridDimY, p->gridDimZ, p->blockDimX, p->blockDimY,
                 p->blockDimZ, nregs, shmem_static_nbytes + p->sharedMemBytes,
                 (uint64_t)p->hStream);
+
+            output_string << "HEADER\n";
+
+            /* Add kernel launch parameters to output header */
+
+            for (int i = 0; i < 3; i++) {
+                GPUMatrix* mat = (GPUMatrix*) p->kernelParams[i];
+                output_string << mat->width << "," 
+                            << mat->height << ","
+                            << mat->pitch << ","
+                            << HEX(mat->elements) << "\n";    
+            }
+
+            output_string << "BODY\n";
         }
-
-		output_string << "HEADER\n";
-
-        /* Add kernel launch parameters to output header */
-
-        //for (int i = 0; p->kernelParams[i] != NULL ; i++) {
-            GPUMatrix* mat = (GPUMatrix*) *p->kernelParams[0];
-            
-            output_string << mat->width << " " << mat->height << "\n";
-            
-            //output_string << HEX(p->kernelParams[i]) << ",";
-        //}
-
-        output_string << "\n";
-
-        output_string << "BODY\n";
-
     }
     skip_callback_flag = false;
     pthread_mutex_unlock(&mutex);
