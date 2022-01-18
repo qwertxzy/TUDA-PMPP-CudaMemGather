@@ -366,7 +366,7 @@ void* recv_thread_fun(void* args) {
 					csv_line << "," << HEX(ma->addrs[i] << ":" << HEX(ma->regs[i]));
 				}
 
-				csv_line << "\n";
+				csv_line << ",\n";
 
                 output_string << csv_line.str();
                 num_processed_bytes += sizeof(mem_access_t);
