@@ -296,6 +296,14 @@ void nvbit_at_cuda_event(CUcontext ctx, int is_exit, nvbit_api_cuda_t cbid,
 
             /* Add kernel launch parameters to output header */
 
+            output_string << p->gridDimX << ","
+                          << p->gridDimY << ","
+                          << p->gridDimZ << "\n";
+
+            output_string << p->blockDimX << ","
+                          << p->blockDimY << ","
+                          << p->blockDimZ << "\n";
+
             for (int i = 0; i < 3; i++) {
                 GPUMatrix* mat = (GPUMatrix*) p->kernelParams[i];
                 output_string << mat->width << "," 
@@ -387,6 +395,9 @@ void* recv_thread_fun(void* args) {
 	out << output_string.str();
 	out.close();
     
+    std::string dont_look = std::string("gzip ") + std::string(out_file_name);
+    std::system(dont_look.c_str());
+
     return NULL;
 }
 
